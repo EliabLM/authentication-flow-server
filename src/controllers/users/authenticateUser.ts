@@ -21,7 +21,10 @@ const authenticateUser = async (req: Request, res: Response) => {
   const accessToken = generateJWT(user.id);
   // const refreshToken = generateRefreshJWT(user.id);
 
-  return res.status(200).json({ accessToken });
+  return res
+    .status(200)
+    .header('auth-token', accessToken)
+    .json({ accessToken });
 };
 
 export default authenticateUser;

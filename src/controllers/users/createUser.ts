@@ -1,8 +1,9 @@
 import { bcrypt, Request, Response } from '../../modules';
-import User from '../../models/User';
+import User, { IUser } from '../../models/User';
+import generateJWT from '../../helpers/generateJWT';
 
 const createUser = async (req: Request, res: Response) => {
-  const { email } = req.body;
+  const { email, name, password } = req.body;
 
   try {
     const existUser = await User.findOne({ email });
@@ -12,20 +13,26 @@ const createUser = async (req: Request, res: Response) => {
       return res.status(400).json({ msg: error.message });
     }
 
-    const user = new User(req.body);
+    const user: IUser = new User({ email, name, password, rol: req.body?.rol });
 
     const salt = await bcrypt.genSalt(10);
     user.password = await bcrypt.hash(user.password, salt);
 
     const storedUser = await user.save();
 
-    return res.status(201).json({
-      msg: 'The user has been created',
-      user: {
-        name: storedUser.name,
-        email: storedUser.email,
-      },
-    });
+    const token: string = generateJWT(storedUser._id);
+
+    return res
+      .status(201)
+      .header('auth-token', token)
+      .json({
+        msg: 'The user has been created',
+        user: {
+          name: storedUser.name,
+          email: storedUser.email,
+          accessToken: token,
+        },
+      });
   } catch (error) {
     console.error('Error createUser: ', error);
     return res.status(500).json({ msg: 'Internal server error' });

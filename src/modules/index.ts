@@ -1,4 +1,4 @@
-import { Schema, model, connect } from 'mongoose';
+import { Schema, model, connect, Document } from 'mongoose';
 import express, {
   Router,
   Express,
@@ -15,6 +15,7 @@ export {
   Schema,
   model,
   connect,
+  Document,
   express,
   Router,
   Express,

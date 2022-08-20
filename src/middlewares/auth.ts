@@ -1,7 +1,7 @@
 import { jwt, Request, Response, NextFunction } from '../modules';
 
 const auth = (req: Request, res: Response, next: NextFunction) => {
-  const token = req.header('x-auth-token');
+  const token = req.header('auth-token');
 
   if (!token) {
     return res.status(401).json({ msg: 'No token, invalid permission' });

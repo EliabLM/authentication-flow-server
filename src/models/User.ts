@@ -1,23 +1,23 @@
-import { Schema, model } from '../modules';
+import { Schema, model, Document } from '../modules';
 
-enum ROLES {
+export enum ROLES {
   ADMIN = 'admin',
   USER = 'user',
 }
 
-interface IUser {
+export interface IUser extends Document {
   name: string;
   rol: ROLES;
   password: string;
   email: string;
-  refreshToken: string;
 }
 
-const userSchema = new Schema<IUser>(
+const userSchema = new Schema(
   {
     name: {
       type: String,
       required: true,
+      lowercase: true,
       trim: true,
     },
     rol: {
@@ -33,15 +33,13 @@ const userSchema = new Schema<IUser>(
     email: {
       type: String,
       required: true,
-      trim: true,
       unique: true,
-    },
-    refreshToken: {
-      type: String,
+      trim: true,
+      lowercase: true,
     },
   },
   { timestamps: true }
 );
 
-const User = model('User', userSchema);
+const User = model<IUser>('User', userSchema);
 export default User;
