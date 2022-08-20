@@ -1,11 +1,29 @@
 import { Schema, model } from '../modules';
 
-const userSchema = new Schema(
+enum ROLES {
+  ADMIN = 'admin',
+  USER = 'user',
+}
+
+interface IUser {
+  name: string;
+  rol: ROLES;
+  password: string;
+  email: string;
+  refreshToken: string;
+}
+
+const userSchema = new Schema<IUser>(
   {
     name: {
       type: String,
       required: true,
       trim: true,
+    },
+    rol: {
+      type: String,
+      default: ROLES.USER,
+      enum: ROLES,
     },
     password: {
       type: String,
@@ -18,12 +36,8 @@ const userSchema = new Schema(
       trim: true,
       unique: true,
     },
-    token: {
+    refreshToken: {
       type: String,
-    },
-    confirmed: {
-      type: Boolean,
-      default: false,
     },
   },
   { timestamps: true }

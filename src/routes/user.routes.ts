@@ -1,13 +1,10 @@
 import { Router } from '../modules';
+import { createUser, authenticateUser, getUsers } from '../controllers/users';
 
 const router = Router();
 
-router.get('/', (_req, res) => {
-  res.send('Desde API/USERS');
-});
-
-router.post('/', (_req, res) => {
-  res.send('Desde api/users');
-});
+router.get('/', getUsers);
+router.post('/', createUser);
+router.post('/login', authenticateUser);
 
 export default router;
